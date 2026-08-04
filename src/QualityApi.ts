@@ -1,28 +1,27 @@
 import { Middleware } from "./Middleware";
-import type { IncomingRequest } from "./IncomingRequest";
 import type {
     DefaultHeaders,
     DefaultParams, DefaultSearchParams,
     IncomingRequestContentType,
     IncomingRequestContentTypeMap,
-    MiddlewareFunction
+    MiddlewareFunction, RootJsonObject
 } from "./types";
 import { Builder } from "./Builder";
 
 namespace QualityApi {
 
     export function createMiddleware<
-        InParams,
-        InSearchParams,
-        InHeaders,
+        InParams extends RootJsonObject,
+        InSearchParams extends RootJsonObject,
+        InHeaders extends RootJsonObject,
         InBody,
-        OutParams,
-        OutSearchParams,
-        OutHeaders,
+        OutParams extends RootJsonObject,
+        OutSearchParams extends RootJsonObject,
+        OutHeaders extends RootJsonObject,
         OutBody
     >(
         mf: MiddlewareFunction<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody>
-    ): Middleware<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody> {
+    ) {
         return new Middleware<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody>(mf);
     }
 

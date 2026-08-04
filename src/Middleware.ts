@@ -1,13 +1,13 @@
-import type { MiddlewareFunction } from "./types";
+import type { MiddlewareFunction, RootJsonObject } from "./types";
 
 export class Middleware<
-    InParams,
-    InSearchParams,
-    InHeaders,
+    InParams extends RootJsonObject,
+    InSearchParams extends RootJsonObject,
+    InHeaders extends RootJsonObject,
     InBody,
-    OutParams,
-    OutSearchParams,
-    OutHeaders,
+    OutParams extends RootJsonObject,
+    OutSearchParams extends RootJsonObject,
+    OutHeaders extends RootJsonObject,
     OutBody
 > {
 

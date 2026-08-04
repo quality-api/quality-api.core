@@ -1,10 +1,10 @@
-import type { IncomingRequestMethod } from "./types";
+import type { IncomingRequestMethod, RootJsonObject } from "./types";
 import type { IncomingRequestUrl } from "./IncomingRequestUrl";
 
 export class IncomingRequest<
-    Params,
-    SearchParams,
-    Headers,
+    Params extends RootJsonObject,
+    SearchParams extends RootJsonObject,
+    Headers extends RootJsonObject,
     Body
 > {
 
@@ -13,7 +13,10 @@ export class IncomingRequest<
         return this._url as IncomingRequestUrl<Params, SearchParams>;
     }
 
-    public transformUrl<P, SP>(
+    public transformUrl<
+        P extends RootJsonObject,
+        SP extends RootJsonObject
+    >(
         transformer: (__url: IncomingRequestUrl<Params, SearchParams>) => IncomingRequestUrl<P, SP>
     ): IncomingRequest<P, SP, Headers, Body> {
         this._url = transformer(this._url as any) as any;
@@ -33,7 +36,7 @@ export class IncomingRequest<
         return this._headers as Headers;
     }
 
-    public transformHeaders<T>(newHeaders: T): IncomingRequest<Params, SearchParams, T, Body> {
+    public transformHeaders<T extends RootJsonObject>(newHeaders: T): IncomingRequest<Params, SearchParams, T, Body> {
         this._headers = newHeaders;
 
         return this as unknown as IncomingRequest<Params, SearchParams, T, Body>;

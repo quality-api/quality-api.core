@@ -1,13 +1,13 @@
-import type { Awaitable, IncomingRequestContentType, IncomingRequestMethod } from "./types";
+import type { Awaitable, IncomingRequestContentType, IncomingRequestMethod, RootJsonObject } from "./types";
 import { Middleware } from "./Middleware";
 import { IncomingRequest } from "./IncomingRequest";
 import { parseRequestBodyByContentType, searchParamsToObj } from "./utils";
 import { IncomingRequestUrl } from "./IncomingRequestUrl";
 
 export class Builder<
-    Params,
-    SearchParams,
-    Headers,
+    Params extends RootJsonObject,
+    SearchParams extends RootJsonObject,
+    Headers extends RootJsonObject,
     Body
 > {
 
@@ -16,9 +16,9 @@ export class Builder<
 
 
     public mw<
-        OutParams,
-        OutSearchParams,
-        OutHeaders,
+        OutParams extends RootJsonObject,
+        OutSearchParams extends RootJsonObject,
+        OutHeaders extends RootJsonObject,
         OutBody
     >(middleware: Middleware<
         Params,
