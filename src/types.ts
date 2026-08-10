@@ -22,26 +22,32 @@ export type IncomingRequestContentTypeMap = {
 
 export type IncomingRequestContentType = keyof IncomingRequestContentTypeMap;
 
-export type DefaultParams = Record<string, string | string[]>;
+export type DefaultParams = Record<string, string>;
 
 export type DefaultSearchParams = Record<string, string | string[]>;
 
 export type DefaultHeaders = Record<string, string>;
 
+export type DefaultData = RootJsonObject;
+
 export type MiddlewareFunction<
-    InParams,
-    InSearchParams,
-    InHeaders,
+    InParams extends RootJsonObject,
+    InSearchParams extends RootJsonObject,
+    InHeaders extends RootJsonObject,
     InBody,
-    OutParams,
-    OutSearchParams,
-    OutHeaders,
+    InData extends RootJsonObject,
+    OutParams extends RootJsonObject,
+    OutSearchParams extends RootJsonObject,
+    OutHeaders extends RootJsonObject,
     OutBody,
+    OutData extends RootJsonObject
 > =
-    (ir: IncomingRequest<InParams, InSearchParams, InHeaders, InBody>) =>
+    (ir: IncomingRequest<InParams, InSearchParams, InHeaders, InBody, InData>) =>
         Awaitable<
-            IncomingRequest<OutParams, OutSearchParams, OutHeaders, OutBody> |
+            IncomingRequest<OutParams, OutSearchParams, OutHeaders, OutBody, OutData> |
             Response
         >;
 
 export type Awaitable<T> = T | Promise<T>;
+
+export type RootJsonObject = Record<any, any>;

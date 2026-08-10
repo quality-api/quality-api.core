@@ -1,14 +1,16 @@
-import type { MiddlewareFunction } from "./types";
+import type { MiddlewareFunction, RootJsonObject } from "./types";
 
 export class Middleware<
-    InParams,
-    InSearchParams,
-    InHeaders,
+    InParams extends RootJsonObject,
+    InSearchParams extends RootJsonObject,
+    InHeaders extends RootJsonObject,
     InBody,
-    OutParams,
-    OutSearchParams,
-    OutHeaders,
-    OutBody
+    InData extends RootJsonObject,
+    OutParams extends RootJsonObject,
+    OutSearchParams extends RootJsonObject,
+    OutHeaders extends RootJsonObject,
+    OutBody,
+    OutData extends RootJsonObject
 > {
 
     private readonly _middlewareFunction: MiddlewareFunction<
@@ -16,10 +18,12 @@ export class Middleware<
         InSearchParams,
         InHeaders,
         InBody,
+        InData,
         OutParams,
         OutSearchParams,
         OutHeaders,
-        OutBody
+        OutBody,
+        OutData
     > = null!;
 
     public get middlewareFunction() {
@@ -32,10 +36,12 @@ export class Middleware<
         InSearchParams,
         InHeaders,
         InBody,
+        InData,
         OutParams,
         OutSearchParams,
         OutHeaders,
-        OutBody
+        OutBody,
+        OutData
     >) {
         this._middlewareFunction = __middlewareFunction;
     }

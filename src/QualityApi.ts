@@ -1,29 +1,31 @@
 import { Middleware } from "./Middleware";
-import type { IncomingRequest } from "./IncomingRequest";
 import type {
+    DefaultData,
     DefaultHeaders,
     DefaultParams, DefaultSearchParams,
     IncomingRequestContentType,
     IncomingRequestContentTypeMap,
-    MiddlewareFunction
+    MiddlewareFunction, RootJsonObject
 } from "./types";
 import { Builder } from "./Builder";
 
 namespace QualityApi {
 
     export function createMiddleware<
-        InParams,
-        InSearchParams,
-        InHeaders,
+        InParams extends RootJsonObject,
+        InSearchParams extends RootJsonObject,
+        InHeaders extends RootJsonObject,
         InBody,
-        OutParams,
-        OutSearchParams,
-        OutHeaders,
-        OutBody
+        InData extends RootJsonObject,
+        OutParams extends RootJsonObject,
+        OutSearchParams extends RootJsonObject,
+        OutHeaders extends RootJsonObject,
+        OutBody,
+        OutData extends RootJsonObject
     >(
-        mf: MiddlewareFunction<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody>
-    ): Middleware<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody> {
-        return new Middleware<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody>(mf);
+        mf: MiddlewareFunction<InParams, InSearchParams, InHeaders, InBody, InData, OutParams, OutSearchParams, OutHeaders, OutBody, OutData>
+    ) {
+        return new Middleware<InParams, InSearchParams, InHeaders, InBody, InData, OutParams, OutSearchParams, OutHeaders, OutBody, OutData>(mf);
     }
 
     export function initBuilder<T extends IncomingRequestContentType | undefined | null>(contentType?: T) {
@@ -33,7 +35,8 @@ namespace QualityApi {
             DefaultHeaders,
             T extends IncomingRequestContentType
                 ? IncomingRequestContentTypeMap[T]
-                : unknown
+                : unknown,
+            DefaultData
         >(contentType);
     }
 

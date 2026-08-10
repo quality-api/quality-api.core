@@ -1,8 +1,8 @@
-import type { DefaultParams, DefaultSearchParams } from "./types";
+import type { DefaultParams, DefaultSearchParams, RootJsonObject } from "./types";
 
 export class IncomingRequestUrl<
-    Params = DefaultParams,
-    SearchParams = DefaultSearchParams
+    Params extends RootJsonObject = DefaultParams,
+    SearchParams extends RootJsonObject = DefaultSearchParams
 > {
 
     private readonly _protocol: string = null!;
@@ -34,7 +34,7 @@ export class IncomingRequestUrl<
         return this._params as Params;
     }
 
-    public transformParams<T>(newParams: T) {
+    public transformParams<T extends RootJsonObject>(newParams: T) {
         this._params = newParams;
 
         return this as unknown as IncomingRequestUrl<T, SearchParams>;
@@ -46,7 +46,7 @@ export class IncomingRequestUrl<
         return this._searchParams as SearchParams;
     }
 
-    public transformSearchParams<T>(newSearchParams: T) {
+    public transformSearchParams<T extends RootJsonObject>(newSearchParams: T) {
         this._searchParams = newSearchParams;
 
         return this as unknown as IncomingRequestUrl<Params, T>;

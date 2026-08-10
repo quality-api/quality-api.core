@@ -1,14 +1,14 @@
 {
-    "name": "@qualityapi/core",
-    "version": "0.0.2",
+    "name": "@quality-api/core",
+    "version": "0.0.3",
     "description": "",
-    "homepage": "https://github.com/qualityapi/qualityapi.core#readme",
+    "homepage": "https://github.com/quality-api/quality-api.core#readme",
     "bugs": {
-        "url": "https://github.com/qualityapi/qualityapi.core/issues"
+        "url": "https://github.com/quality-api/quality-api.core/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/qualityapi/qualityapi.core.git"
+        "url": "git+https://github.com/quality-api/quality-api.core.git"
     },
     "exports": {
         "import": "./dist/index.js",
