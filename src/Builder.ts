@@ -48,8 +48,6 @@ export class Builder<
                 body = this._contentType && await parseRequestBodyByContentType(request, this._contentType);
             }
             catch (err) {
-                console.error(`Could not parse request body to content type "${this._contentType}". Returning 422.\n${err}`);
-
                 return new Response(null, { status: 422 });
             }
 
