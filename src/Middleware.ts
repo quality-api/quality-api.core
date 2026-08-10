@@ -5,10 +5,12 @@ export class Middleware<
     InSearchParams extends RootJsonObject,
     InHeaders extends RootJsonObject,
     InBody,
+    InData extends RootJsonObject,
     OutParams extends RootJsonObject,
     OutSearchParams extends RootJsonObject,
     OutHeaders extends RootJsonObject,
-    OutBody
+    OutBody,
+    OutData extends RootJsonObject
 > {
 
     private readonly _middlewareFunction: MiddlewareFunction<
@@ -16,10 +18,12 @@ export class Middleware<
         InSearchParams,
         InHeaders,
         InBody,
+        InData,
         OutParams,
         OutSearchParams,
         OutHeaders,
-        OutBody
+        OutBody,
+        OutData
     > = null!;
 
     public get middlewareFunction() {
@@ -32,10 +36,12 @@ export class Middleware<
         InSearchParams,
         InHeaders,
         InBody,
+        InData,
         OutParams,
         OutSearchParams,
         OutHeaders,
-        OutBody
+        OutBody,
+        OutData
     >) {
         this._middlewareFunction = __middlewareFunction;
     }

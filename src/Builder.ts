@@ -8,35 +8,39 @@ export class Builder<
     Params extends RootJsonObject,
     SearchParams extends RootJsonObject,
     Headers extends RootJsonObject,
-    Body
+    Body,
+    Data extends RootJsonObject
 > {
 
     private readonly _contentType: IncomingRequestContentType | undefined | null = null;
-    private readonly _middlewares: Middleware<any, any, any, any, any, any, any, any>[] = [];
+    private readonly _middlewares: Middleware<any, any, any, any, any, any, any, any, any, any>[] = [];
 
 
     public mw<
         OutParams extends RootJsonObject,
         OutSearchParams extends RootJsonObject,
         OutHeaders extends RootJsonObject,
-        OutBody
+        OutBody,
+        OutData extends RootJsonObject
     >(middleware: Middleware<
         Params,
         SearchParams,
         Headers,
         Body,
+        Data,
         OutParams,
         OutSearchParams,
         OutHeaders,
-        OutBody
+        OutBody,
+        OutData
     >) {
         this._middlewares.push(middleware);
 
-        return this as unknown as Builder<OutParams, OutSearchParams, OutHeaders, OutBody>;
+        return this as unknown as Builder<OutParams, OutSearchParams, OutHeaders, OutBody, OutData>;
     }
 
 
-    public handle(handler: (r: IncomingRequest<Params, SearchParams, Headers, Body>) => Awaitable<Response>) {
+    public handle(handler: (r: IncomingRequest<Params, SearchParams, Headers, Body, Data>) => Awaitable<Response>) {
         return async (request: Request, context: { params: Promise<any> }) => {
             let body;
 
@@ -75,7 +79,7 @@ export class Builder<
                 ir = execResult;
             }
 
-            return handler(ir as IncomingRequest<Params, SearchParams, Headers, Body>);
+            return handler(ir as IncomingRequest<Params, SearchParams, Headers, Body, Data>);
         };
     }
 

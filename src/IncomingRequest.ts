@@ -5,7 +5,8 @@ export class IncomingRequest<
     Params extends RootJsonObject,
     SearchParams extends RootJsonObject,
     Headers extends RootJsonObject,
-    Body
+    Body,
+    Data extends RootJsonObject
 > {
 
     private _url: IncomingRequestUrl = null!;
@@ -18,10 +19,10 @@ export class IncomingRequest<
         SP extends RootJsonObject
     >(
         transformer: (__url: IncomingRequestUrl<Params, SearchParams>) => IncomingRequestUrl<P, SP>
-    ): IncomingRequest<P, SP, Headers, Body> {
+    ) {
         this._url = transformer(this._url as any) as any;
 
-        return this as unknown as IncomingRequest<P, SP, Headers, Body>;
+        return this as unknown as IncomingRequest<P, SP, Headers, Body, Data>;
     }
 
 
@@ -36,10 +37,10 @@ export class IncomingRequest<
         return this._headers as Headers;
     }
 
-    public transformHeaders<T extends RootJsonObject>(newHeaders: T): IncomingRequest<Params, SearchParams, T, Body> {
+    public transformHeaders<T extends RootJsonObject>(newHeaders: T) {
         this._headers = newHeaders;
 
-        return this as unknown as IncomingRequest<Params, SearchParams, T, Body>;
+        return this as unknown as IncomingRequest<Params, SearchParams, T, Body, Data>;
     }
 
 
@@ -48,10 +49,22 @@ export class IncomingRequest<
         return this._body as Body;
     }
 
-    public transformBody<T>(newBody: T): IncomingRequest<Params, SearchParams, Headers, T> {
+    public transformBody<T>(newBody: T) {
         this._body = newBody;
 
-        return this as unknown as IncomingRequest<Params, SearchParams, Headers, T>;
+        return this as unknown as IncomingRequest<Params, SearchParams, Headers, T, Data>;
+    }
+
+
+    private _data: any = {};
+    public get data() {
+        return this._data as Data;
+    }
+
+    public transformData<T extends RootJsonObject>(newData: T) {
+        this._data = newData;
+
+        return this as unknown as IncomingRequest<Params, SearchParams, Headers, Body, T>
     }
 
 

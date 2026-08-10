@@ -1,5 +1,6 @@
 import { Middleware } from "./Middleware";
 import type {
+    DefaultData,
     DefaultHeaders,
     DefaultParams, DefaultSearchParams,
     IncomingRequestContentType,
@@ -15,14 +16,16 @@ namespace QualityApi {
         InSearchParams extends RootJsonObject,
         InHeaders extends RootJsonObject,
         InBody,
+        InData extends RootJsonObject,
         OutParams extends RootJsonObject,
         OutSearchParams extends RootJsonObject,
         OutHeaders extends RootJsonObject,
-        OutBody
+        OutBody,
+        OutData extends RootJsonObject
     >(
-        mf: MiddlewareFunction<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody>
+        mf: MiddlewareFunction<InParams, InSearchParams, InHeaders, InBody, InData, OutParams, OutSearchParams, OutHeaders, OutBody, OutData>
     ) {
-        return new Middleware<InParams, InSearchParams, InHeaders, InBody, OutParams, OutSearchParams, OutHeaders, OutBody>(mf);
+        return new Middleware<InParams, InSearchParams, InHeaders, InBody, InData, OutParams, OutSearchParams, OutHeaders, OutBody, OutData>(mf);
     }
 
     export function initBuilder<T extends IncomingRequestContentType | undefined | null>(contentType?: T) {
@@ -32,7 +35,8 @@ namespace QualityApi {
             DefaultHeaders,
             T extends IncomingRequestContentType
                 ? IncomingRequestContentTypeMap[T]
-                : unknown
+                : unknown,
+            DefaultData
         >(contentType);
     }
 

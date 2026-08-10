@@ -28,19 +28,23 @@ export type DefaultSearchParams = Record<string, string | string[]>;
 
 export type DefaultHeaders = Record<string, string>;
 
+export type DefaultData = RootJsonObject;
+
 export type MiddlewareFunction<
     InParams extends RootJsonObject,
     InSearchParams extends RootJsonObject,
     InHeaders extends RootJsonObject,
     InBody,
+    InData extends RootJsonObject,
     OutParams extends RootJsonObject,
     OutSearchParams extends RootJsonObject,
     OutHeaders extends RootJsonObject,
     OutBody,
+    OutData extends RootJsonObject
 > =
-    (ir: IncomingRequest<InParams, InSearchParams, InHeaders, InBody>) =>
+    (ir: IncomingRequest<InParams, InSearchParams, InHeaders, InBody, InData>) =>
         Awaitable<
-            IncomingRequest<OutParams, OutSearchParams, OutHeaders, OutBody> |
+            IncomingRequest<OutParams, OutSearchParams, OutHeaders, OutBody, OutData> |
             Response
         >;
 
