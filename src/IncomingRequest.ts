@@ -61,10 +61,16 @@ export class IncomingRequest<
         return this._data as Data;
     }
 
-    public transformData<T extends RootJsonObject>(newData: T) {
-        this._data = newData;
+    public setData<Key extends string, T>(key: Key, v: T) {
+        this._data[key] = v;
 
-        return this as unknown as IncomingRequest<Params, SearchParams, Headers, Body, T>
+        return this as unknown as IncomingRequest<Params, SearchParams, Headers, Body, Data & Record<Key, T>>;
+    }
+
+    public deleteData<Key extends keyof Data>(key: Key) {
+        delete this._data[key];
+
+        return this as unknown as IncomingRequest<Params, SearchParams, Headers, Body, Omit<Data, Key>>;
     }
 
 
