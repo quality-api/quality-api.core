@@ -1,89 +1,84 @@
-import type { Awaitable, IncomingRequestContentType, IncomingRequestMethod, RootJsonObject } from "./types";
-import { Middleware } from "./Middleware";
-import { IncomingRequest } from "./IncomingRequest";
-import { parseRequestBodyByContentType, searchParamsToObj } from "./utils";
-import { IncomingRequestUrl } from "./IncomingRequestUrl";
+import type { Awaitable, ContentType, ContentTypeMap, Json, Method } from "./types";
+import type { Middleware } from "./Middleware";
+import Request from "./Request";
+import { nativeSearchParamsToObject } from "./utils";
 
-export class Builder<
-    Params extends RootJsonObject,
-    SearchParams extends RootJsonObject,
-    Headers extends RootJsonObject,
+class Builder<
+    Params extends Json,
+    SearchParams extends Json,
     Body,
-    Data extends RootJsonObject
+    Data extends Json
 > {
 
-    private readonly _contentType: IncomingRequestContentType | undefined | null = null;
-    private readonly _middlewares: Middleware<any, any, any, any, any, any, any, any, any, any>[] = [];
+    private readonly _contentType: ContentType = null!;
+    private readonly _middlewares: Middleware<any, any, any, any, any, any, any, any>[] = [];
 
 
-    public mw<
-        OutParams extends RootJsonObject,
-        OutSearchParams extends RootJsonObject,
-        OutHeaders extends RootJsonObject,
-        OutBody,
-        OutData extends RootJsonObject
-    >(middleware: Middleware<
-        Params,
-        SearchParams,
-        Headers,
-        Body,
-        Data,
-        OutParams,
-        OutSearchParams,
-        OutHeaders,
-        OutBody,
-        OutData
-    >) {
-        this._middlewares.push(middleware);
 
-        return this as unknown as Builder<OutParams, OutSearchParams, OutHeaders, OutBody, OutData>;
+    public add<
+        Out_Params extends Json,
+        Out_SearchParams extends Json,
+        Out_Body,
+        Out_Data extends Json
+    >(
+        mw: Middleware<
+            Params,
+            SearchParams,
+            Body,
+            Data,
+            Out_Params,
+            Out_SearchParams,
+            Out_Body,
+            Out_Data
+        >
+    ) {
+        this._middlewares.push(mw);
+
+        return this as unknown as Builder<Out_Params, Out_SearchParams, Out_Body, Out_Data>;
     }
 
 
-    public handle(handler: (r: IncomingRequest<Params, SearchParams, Headers, Body, Data>) => Awaitable<Response>) {
-        return async (request: Request, context: { params: Promise<any> }) => {
+
+    public end(fn: (request: Request<Params, SearchParams, Body, Data>) => Awaitable<Response>) {
+        return async (nativeRequest: globalThis.Request, context: { params: Promise<any> }) => {
             let body;
 
             try {
-                body = this._contentType && await parseRequestBodyByContentType(request, this._contentType);
+                body = this._contentType && await nativeRequest[this._contentType]();
             }
-            catch (err) {
+            catch {
                 return new Response(null, { status: 422 });
             }
 
-            const url = new URL(request.url);
-
-            const irurl = new IncomingRequestUrl(
-                url.protocol,
-                url.host,
-                url.hostname,
-                url.pathname,
-                await context.params ?? {},
-                searchParamsToObj(url.searchParams)
-            );
-
-            let ir = new IncomingRequest(
-                irurl,
-                request.method.toLowerCase() as IncomingRequestMethod,
-                Object.fromEntries(request.headers.entries()),
-                body
+            let request = new Request(
+                new URL(nativeRequest.url),
+                await context.params,
+                nativeSearchParamsToObject(nativeRequest.url.search.toString()),
+                nativeRequest.method.toUpperCase() as Method,
+                Object.fromEntries(nativeRequest.headers.entries()),
+                body,
+                {}
             );
 
             for (const mw of this._middlewares) {
-                const execResult = await mw.middlewareFunction(ir);
+                const result = await mw(request);
 
-                if (execResult instanceof Response) return execResult;
+                if (result instanceof Response)
+                    return result;
 
-                ir = execResult;
+                request = result;
             }
 
-            return handler(ir as IncomingRequest<Params, SearchParams, Headers, Body, Data>);
+            return fn(request as Request<Params, SearchParams, Body, Data>);
         };
     }
 
 
-    constructor(__contentType?: IncomingRequestContentType | null) {
-        this._contentType = __contentType;
+
+    constructor(__contentType?: ContentType) {
+        if (__contentType) this._contentType = __contentType;
     }
 
 }
+
+export default Builder;

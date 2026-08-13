@@ -1,49 +1,28 @@
-import type { MiddlewareFunction, RootJsonObject } from "./types";
+import type { Awaitable, Json } from "./types";
+import type Request from "./Request";
 
-export class Middleware<
-    InParams extends RootJsonObject,
-    InSearchParams extends RootJsonObject,
-    InHeaders extends RootJsonObject,
-    InBody,
-    InData extends RootJsonObject,
-    OutParams extends RootJsonObject,
-    OutSearchParams extends RootJsonObject,
-    OutHeaders extends RootJsonObject,
-    OutBody,
-    OutData extends RootJsonObject
-> {
-
-    private readonly _middlewareFunction: MiddlewareFunction<
-        InParams,
-        InSearchParams,
-        InHeaders,
-        InBody,
-        InData,
-        OutParams,
-        OutSearchParams,
-        OutHeaders,
-        OutBody,
-        OutData
-    > = null!;
-
-    public get middlewareFunction() {
-        return this._middlewareFunction;
-    }
-
-
-    constructor(__middlewareFunction: MiddlewareFunction<
-        InParams,
-        InSearchParams,
-        InHeaders,
-        InBody,
-        InData,
-        OutParams,
-        OutSearchParams,
-        OutHeaders,
-        OutBody,
-        OutData
-    >) {
-        this._middlewareFunction = __middlewareFunction;
-    }
-
-}
+export type Middleware<
+    Start_Params extends Json,
+    Start_SearchParams extends Json,
+    Start_Body,
+    Start_Data extends Json,
+    End_Params extends Json,
+    End_SearchParams extends Json,
+    End_Body,
+    End_Data extends Json
+> = (
+    request: Request<
+        Start_Params,
+        Start_SearchParams,
+        Start_Body,
+        Start_Data
+    >
+) =>
+    Awaitable<
+        Request<
+            End_Params,
+            End_SearchParams,
+            End_Body,
+            End_Data
+        > | Response
+    >;
