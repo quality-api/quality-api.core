@@ -16,7 +16,11 @@ namespace QualityApi {
         End_Params extends Json,
         End_SearchParams extends Json,
         End_Body,
-        End_Data extends Json
+        End_Data extends Json,
+        Modified_Params extends boolean,
+        Modified_SearchParams extends boolean,
+        Modified_Body extends boolean,
+        Modified_Data extends boolean
     >(
         fn: Middleware<
             Start_Params,
@@ -26,7 +30,11 @@ namespace QualityApi {
             End_Params,
             End_SearchParams,
             End_Body,
-            End_Data
+            End_Data,
+            Modified_Params,
+            Modified_SearchParams,
+            Modified_Body,
+            Modified_Data
         >
     ) {
         return fn;

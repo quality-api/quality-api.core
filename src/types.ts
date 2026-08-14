@@ -24,3 +24,8 @@ export type ContentTypeMap = {
 };
 
 export type ContentType = keyof ContentTypeMap;
+
+export type Alike<A, B, True, False> =
+    { _: A } extends { _: B }
+        ? True
+        : False;

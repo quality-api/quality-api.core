@@ -21,46 +21,12 @@ class Request<
         return this._params;
     }
 
-    public setParams<T extends Json>(v: T) {
-        return new Request<
-            T,
-            SearchParams,
-            Body,
-            Data
-        >(
-            this._url,
-            v,
-            this._searchParams,
-            this._method,
-            this._headers,
-            this._body,
-            this._data
-        );
-    }
-
 
 
     private _searchParams: SearchParams = null!;
 
     public get searchParams() {
         return this._searchParams;
-    }
-
-    public setSearchParams<T extends Json>(v: T) {
-        return new Request<
-            Params,
-            T,
-            Body,
-            Data
-        >(
-            this._url,
-            this._params,
-            v,
-            this._method,
-            this._headers,
-            this._body,
-            this._data
-        );
     }
 
 
@@ -87,67 +53,12 @@ class Request<
         return this._body;
     }
 
-    public setBody<T>(v: T) {
-        return new Request<
-            Params,
-            SearchParams,
-            T,
-            Data
-        >(
-            this._url,
-            this._params,
-            this._searchParams,
-            this._method,
-            this._headers,
-            v,
-            this._data
-        );
-    }
-
 
 
     private _data: Data = null!;
 
     public get data() {
         return this._data;
-    }
-
-    public setDataField<Key extends string, T>(key: Key, v: T) {
-        return new Request<
-            Params,
-            SearchParams,
-            Body,
-            Data & Record<Key, T>
-        >(
-            this._url,
-            this._params,
-            this._searchParams,
-            this._method,
-            this._headers,
-            this._body,
-            { ...this._data, [key]: v }
-        );
-    }
-
-    public deleteDataField<Key extends string, T>(key: Key, v: T) {
-        const dataClone = structuredClone(this._data);
-
-        delete dataClone[key];
-
-        return new Request<
-            Params,
-            SearchParams,
-            Body,
-            Omit<Data, Key>
-        >(
-            this._url,
-            this._params,
-            this._searchParams,
-            this._method,
-            this._headers,
-            this._body,
-            dataClone
-        );
     }
 
 

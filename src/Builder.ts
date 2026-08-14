@@ -1,7 +1,8 @@
-import type { Awaitable, ContentType, ContentTypeMap, Json, Method } from "./types";
+import type { Awaitable, ContentType, Json, Method } from "./types";
 import type { Middleware } from "./Middleware";
 import Request from "./Request";
 import { nativeSearchParamsToObject } from "./utils";
+import MiddlewareRequest from "./MiddlewareRequest";
 
 class Builder<
     Params extends Json,
@@ -11,7 +12,7 @@ class Builder<
 > {
 
     private readonly _contentType: ContentType = null!;
-    private readonly _middlewares: Middleware<any, any, any, any, any, any, any, any>[] = [];
+    private readonly _middlewares: Middleware<any, any, any, any, any, any, any, any, any, any, any, any>[] = [];
 
 
 
@@ -19,7 +20,11 @@ class Builder<
         Out_Params extends Json,
         Out_SearchParams extends Json,
         Out_Body,
-        Out_Data extends Json
+        Out_Data extends Json,
+        Modified_Params extends boolean,
+        Modified_SearchParams extends boolean,
+        Modified_Body extends boolean,
+        Modified_Data extends boolean
     >(
         mw: Middleware<
             Params,
@@ -29,12 +34,29 @@ class Builder<
             Out_Params,
             Out_SearchParams,
             Out_Body,
-            Out_Data
+            Out_Data,
+            Modified_Params,
+            Modified_SearchParams,
+            Modified_Body,
+            Modified_Data
         >
     ) {
         this._middlewares.push(mw);
 
-        return this as unknown as Builder<Out_Params, Out_SearchParams, Out_Body, Out_Data>;
+        return this as unknown as Builder<
+            Modified_Params extends true
+                ? Out_Params
+                : Params,
+            Modified_SearchParams extends true
+                ? Out_SearchParams
+                : SearchParams,
+            Modified_Body extends true
+                ? Out_Body
+                : Body,
+            Modified_Data extends true
+                ? Out_Data
+                : Data
+        >;
     }
 
 
@@ -50,7 +72,7 @@ class Builder<
                 return new Response(null, { status: 422 });
             }
 
-            let request = new Request(
+            let request = new MiddlewareRequest(
                 new URL(nativeRequest.url),
                 await context.params,
                 nativeSearchParamsToObject(nativeRequest.url.search.toString()),
@@ -69,7 +91,7 @@ class Builder<
                 request = result;
             }
 
-            return fn(request as Request<Params, SearchParams, Body, Data>);
+            return fn(request as unknown as Request<Params, SearchParams, Body, Data>);
         };
     }
 
