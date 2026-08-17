@@ -15,12 +15,12 @@ export type Headers = Record<JsonKey, string>;
 export type Awaitable<T> = T | Promise<T>;
 
 export type ContentTypeMap = {
-    json: Awaited<Request["json"]>,
-    blob: Awaited<Request["blob"]>,
-    arrayBuffer: Awaited<Request["arrayBuffer"]>,
-    bytes: Awaited<Request["bytes"]>,
-    formData: Awaited<Request["formData"]>,
-    text: Awaited<Request["text"]>
+    json: Awaited<ReturnType<Request["json"]>>,
+    blob: Awaited<ReturnType<Request["blob"]>>,
+    arrayBuffer: Awaited<ReturnType<Request["arrayBuffer"]>>,
+    bytes: Awaited<ReturnType<Request["bytes"]>>,
+    formData: Awaited<ReturnType<Request["formData"]>>,
+    text: Awaited<ReturnType<Request["text"]>>
 };
 
 export type ContentType = keyof ContentTypeMap;

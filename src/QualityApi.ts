@@ -1,11 +1,18 @@
-import type { ContentType, Json } from "./types";
+import type { ContentType, ContentTypeMap, Json } from "./types";
 import Builder from "./Builder";
 import type { Middleware } from "./Middleware";
 
 namespace QualityApi {
 
-    export function start(contentType?: ContentType) {
-        return new Builder(contentType);
+    export function start<CT extends ContentType | undefined = undefined>(contentType?: CT) {
+        return new Builder<
+            Json,
+            Json,
+            CT extends ContentType
+                ? ContentTypeMap[CT]
+                : unknown,
+            Json
+        >(contentType);
     }
 
     export function createMiddleware<
