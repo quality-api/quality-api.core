@@ -81,12 +81,12 @@ class MiddlewareRequest<
 
 
 
-    public setData<T extends Json>(v: T) {
+    public setData<Key extends string, T>(key: Key, v: T) {
         return new MiddlewareRequest<
             Params,
             SearchParams,
             Body,
-            T,
+            Record<Key, T>,
             Modified_Params,
             Modified_SearchParams,
             Modified_Body,
@@ -98,7 +98,7 @@ class MiddlewareRequest<
             this.method,
             this.headers,
             this.body,
-            v
+            { ...this.data, [key]: v }
         );
     }
 

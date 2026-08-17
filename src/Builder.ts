@@ -54,7 +54,7 @@ class Builder<
                 ? Out_Body
                 : Body,
             Modified_Data extends true
-                ? Out_Data
+                ? Data & Out_Data
                 : Data
         >;
     }
