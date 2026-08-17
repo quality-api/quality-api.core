@@ -1,8 +1,9 @@
 {
     "name": "@quality-api/core",
     "version": "0.0.7",
-    "description": "",
-    "homepage": "https://github.com/quality-api/quality-api.core#readme",
+    "description": "A new fancy, type-safe and extremely extensible Next.js fullstack library",
+    "keywords": ["api", "next", "next.js", "qualityapi", "quality-api", "library", "types", "typescript", "type-safe", "quality-api-core", "quality-api/core", "@quality-api/core"],
+    "homepage": "https://docs.quality-api.dev",
     "bugs": {
         "url": "https://github.com/quality-api/quality-api.core/issues"
     },
@@ -16,7 +17,6 @@
         "types": "./dist/index.d.ts"
     },
     "license": "Apache-2.0",
-    "author": "",
     "type": "module",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
