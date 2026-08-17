@@ -1,17 +1,10 @@
-import type { IncomingRequestContentType, IncomingRequestContentTypeMap } from "./types";
+export function nativeSearchParamsToObject(_nsp: URLSearchParams | string) {
+    const nsp = _nsp instanceof URLSearchParams ? _nsp : new URLSearchParams(_nsp);
 
-export async function parseRequestBodyByContentType<CT extends IncomingRequestContentType>(
-    request: Request,
-    contentType: CT
-): Promise<IncomingRequestContentTypeMap[CT]> {
-    return request[contentType]();
-}
-
-export function searchParamsToObj(urlsp: URLSearchParams) {
     const result: Record<string, string | string[]> = {};
 
-    for (const k of urlsp.keys()) {
-        const v = urlsp.getAll(k);
+    for (const k of nsp.keys()) {
+        const v = nsp.getAll(k);
 
         result[k] =
             v.length === 1

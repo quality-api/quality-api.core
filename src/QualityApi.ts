@@ -1,50 +1,43 @@
-import { Middleware } from "./Middleware";
-import type {
-    DefaultData,
-    DefaultHeaders,
-    DefaultParams, DefaultSearchParams,
-    IncomingRequestContentType,
-    IncomingRequestContentTypeMap,
-    MiddlewareFunction, RootJsonObject
-} from "./types";
-import { Builder } from "./Builder";
+import type { ContentType, Json } from "./types";
+import Builder from "./Builder";
+import type { Middleware } from "./Middleware";
 
 namespace QualityApi {
 
+    export function start(contentType?: ContentType) {
+        return new Builder(contentType);
+    }
+
     export function createMiddleware<
-        InParams extends RootJsonObject,
-        InSearchParams extends RootJsonObject,
-        InHeaders extends RootJsonObject,
-        InBody,
-        InData extends RootJsonObject,
-        OutParams extends RootJsonObject,
-        OutSearchParams extends RootJsonObject,
-        OutHeaders extends RootJsonObject,
-        OutBody,
-        OutData extends RootJsonObject
+        Start_Params extends Json,
+        Start_SearchParams extends Json,
+        Start_Body,
+        Start_Data extends Json,
+        End_Params extends Json,
+        End_SearchParams extends Json,
+        End_Body,
+        End_Data extends Json,
+        Modified_Params extends boolean,
+        Modified_SearchParams extends boolean,
+        Modified_Body extends boolean,
+        Modified_Data extends boolean
     >(
-        mf: MiddlewareFunction<InParams, InSearchParams, InHeaders, InBody, InData, OutParams, OutSearchParams, OutHeaders, OutBody, OutData>
+        fn: Middleware<
+            Start_Params,
+            Start_SearchParams,
+            Start_Body,
+            Start_Data,
+            End_Params,
+            End_SearchParams,
+            End_Body,
+            End_Data,
+            Modified_Params,
+            Modified_SearchParams,
+            Modified_Body,
+            Modified_Data
+        >
     ) {
-        return new Middleware<InParams, InSearchParams, InHeaders, InBody, InData, OutParams, OutSearchParams, OutHeaders, OutBody, OutData>(mf);
-    }
-
-    export function initBuilder<T extends IncomingRequestContentType | undefined | null>(contentType?: T) {
-        return new Builder<
-            DefaultParams,
-            DefaultSearchParams,
-            DefaultHeaders,
-            T extends IncomingRequestContentType
-                ? IncomingRequestContentTypeMap[T]
-                : unknown,
-            DefaultData
-        >(contentType);
-    }
-
-    export function respond(
-        body: ConstructorParameters<typeof Response>[0],
-        init: ConstructorParameters<typeof Response>[1]
-    ) {
-        return new Response(body, init);
+        return fn;
     }
 
 }

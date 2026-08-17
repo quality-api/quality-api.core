@@ -1,9 +1,6 @@
-export type { Middleware } from "./Middleware";
-export type { IncomingRequest } from "./IncomingRequest";
-export type { Builder } from "./Builder";
-export type { IncomingRequestUrl } from "./IncomingRequestUrl";
+export * from "./Middleware";
 
-export * from "./types";
+export { default as Builder } from "./Builder";
 
 import QualityApi from "./QualityApi";
 
