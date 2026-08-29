@@ -14,9 +14,17 @@
         "type-safe",
         "quality-api-core",
         "quality-api/core",
-        "@quality-api/core"
+        "@quality-api/core",
+        "backend",
+        "wrapper",
+        "endpoint",
+        "endpoints",
+        "util",
+        "utils",
+        "utility",
+        "utilities"
     ],
-    "homepage": "https://docs.quality-api.dev",
+    "homepage": "https://quality-api.dev",
     "bugs": {
         "url": "https://github.com/quality-api/quality-api.core/issues"
     },
