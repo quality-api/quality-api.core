@@ -74,8 +74,8 @@ class Builder<
 
             let request = new MiddlewareRequest(
                 new URL(nativeRequest.url),
-                await context.params,
-                nativeSearchParamsToObject(nativeRequest.url.search.toString()),
+                (await context.params) ?? {},
+                nativeSearchParamsToObject(nativeRequest.url),
                 nativeRequest.method.toUpperCase() as Method,
                 Object.fromEntries(nativeRequest.headers.entries()),
                 body,
