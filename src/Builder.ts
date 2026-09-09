@@ -91,7 +91,22 @@ class Builder<
                 request = result;
             }
 
-            return fn(request as unknown as Request<Params, SearchParams, Body, Data>);
+            const endRequest = new Request<
+                Params,
+                SearchParams,
+                Body,
+                Data
+            >(
+                request.url,
+                request.params as Params,
+                request.searchParams as SearchParams,
+                request.method,
+                request.headers,
+                request.body as Body,
+                request.data as Data
+            );
+
+            return fn(endRequest);
         };
     }
 
