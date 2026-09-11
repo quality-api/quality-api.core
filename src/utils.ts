@@ -1,5 +1,5 @@
-export function nativeSearchParamsToObject(_nsp: URLSearchParams | string) {
-    const nsp = _nsp instanceof URLSearchParams ? _nsp : new URLSearchParams(_nsp);
+export function nativeSearchParamsToObject(url: string) {
+    const nsp = new URL(url).searchParams;
 
     const result: Record<string, string | string[]> = {};
 

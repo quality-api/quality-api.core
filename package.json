@@ -1,6 +1,6 @@
 {
     "name": "@quality-api/core",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "A new fancy, type-safe and extremely extensible Next.js fullstack library",
     "keywords": [
         "api",

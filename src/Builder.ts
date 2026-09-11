@@ -74,8 +74,8 @@ class Builder<
 
             let request = new MiddlewareRequest(
                 new URL(nativeRequest.url),
-                await context.params,
-                nativeSearchParamsToObject(nativeRequest.url.search.toString()),
+                (await context.params) ?? {},
+                nativeSearchParamsToObject(nativeRequest.url),
                 nativeRequest.method.toUpperCase() as Method,
                 Object.fromEntries(nativeRequest.headers.entries()),
                 body,
@@ -91,7 +91,22 @@ class Builder<
                 request = result;
             }
 
-            return fn(request as unknown as Request<Params, SearchParams, Body, Data>);
+            const endRequest = new Request<
+                Params,
+                SearchParams,
+                Body,
+                Data
+            >(
+                request.url,
+                request.params as Params,
+                request.searchParams as SearchParams,
+                request.method,
+                request.headers,
+                request.body as Body,
+                request.data as Data
+            );
+
+            return fn(endRequest);
         };
     }
 
